@@ -8,7 +8,7 @@ import { RouteComponentProps } from 'react-router-dom'
 import { Text } from 'rebass'
 import { ThemeContext } from 'styled-components'
 import { ButtonError, ButtonLight, ButtonPrimary } from '../../components/Button'
-import { BlueCard, LightCard } from '../../components/Card'
+import { LightCard } from '../../components/Card'
 import { AutoColumn, ColumnCenter } from '../../components/Column'
 import TransactionConfirmationModal, { ConfirmationModalContent } from '../../components/TransactionConfirmationModal'
 import CurrencyInputPanel from '../../components/CurrencyInputPanel'
@@ -328,7 +328,7 @@ export default function AddLiquidity({
             {noLiquidity ||
               (isCreate && (
                 <ColumnCenter>
-                  <BlueCard>
+                  <LightCard>
                     <AutoColumn gap="10px">
                       <TYPE.link fontWeight={600} color={'primaryText1'}>
                         You are the first liquidity provider.
@@ -340,7 +340,7 @@ export default function AddLiquidity({
                         Once you are happy with the rate click supply to review.
                       </TYPE.link>
                     </AutoColumn>
-                  </BlueCard>
+                  </LightCard>
                 </ColumnCenter>
               ))}
             <CurrencyInputPanel
