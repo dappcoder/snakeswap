@@ -3,13 +3,13 @@
   "name": "Snakeswap",
   "icons": [
     {
-      "src": "./images/192x192_App_Icon.png",
+      "src": "./images/Icon_192.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any maskable"
     },
     {
-      "src": "./images/512x512_App_Icon.png",
+      "src": "./images/Icon_512.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any maskable"
@@ -17,6 +17,6 @@
   ],
   "orientation": "portrait",
   "display": "standalone",
-  "theme_color": "#38E065",
+  "theme_color": "#C43535",
   "background_color": "#fff"
 }
