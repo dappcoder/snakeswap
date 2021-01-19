@@ -11,7 +11,7 @@ import LogoDark from '../../assets/svg/logo_white.svg'
 import { useActiveWeb3React } from '../../hooks'
 import { useDarkModeManager } from '../../state/user/hooks'
 import { useETHBalances } from '../../state/wallet/hooks'
-import { ExternalLink } from '../../theme'
+// import { ExternalLink } from '../../theme'
 import { OutlineCard } from '../Card'
 import Settings from '../Settings'
 
@@ -192,37 +192,37 @@ const StyledNavLink = styled(NavLink).attrs({
   }
 `
 
-const StyledExternalLink = styled(ExternalLink).attrs({
-  activeClassName
-})<{ isActive?: boolean }>`
-  ${({ theme }) => theme.flexRowNoWrap}
-  align-items: left;
-  border-radius: 3rem;
-  outline: none;
-  cursor: pointer;
-  text-decoration: none;
-  color: ${({ theme }) => theme.text2};
-  font-size: 1.3rem;
-  width: fit-content;
-  margin: 0 12px;
-  font-weight: 500;
-  transition: 0.2s;
+// const StyledExternalLink = styled(ExternalLink).attrs({
+//   activeClassName
+// })<{ isActive?: boolean }>`
+//   ${({ theme }) => theme.flexRowNoWrap}
+//   align-items: left;
+//   border-radius: 3rem;
+//   outline: none;
+//   cursor: pointer;
+//   text-decoration: none;
+//   color: ${({ theme }) => theme.text2};
+//   font-size: 1.3rem;
+//   width: fit-content;
+//   margin: 0 12px;
+//   font-weight: 500;
+//   transition: 0.2s;
 
-  &.${activeClassName} {
-    border-radius: 12px;
-    font-weight: 600;
-    color: ${({ theme }) => theme.text1};
-  }
+//   &.${activeClassName} {
+//     border-radius: 12px;
+//     font-weight: 600;
+//     color: ${({ theme }) => theme.text1};
+//   }
 
-  :hover,
-  :focus {
-    color: ${({ theme }) => darken(0.1, theme.text1)};
-  }
+//   :hover,
+//   :focus {
+//     color: ${({ theme }) => darken(0.1, theme.text1)};
+//   }
 
-  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
-      display: none;
-`}
-`
+//   ${({ theme }) => theme.mediaWidth.upToExtraSmall`
+//       display: none;
+// `}
+// `
 
 const NETWORK_LABELS: { [chainId in ChainId]?: string } = {
   [ChainId.RINKEBY]: 'Rinkeby',
@@ -238,15 +238,6 @@ export default function Header() {
   const userEthBalance = useETHBalances(account ? [account] : [])?.[account ?? '']
   const [isDark] = useDarkModeManager()
   const [showUniBalanceModal, setShowUniBalanceModal] = useState(false)
-
-  // const toggleClaimModal = useToggleSelfClaimModal()
-  // const availableClaim: boolean = useUserHasAvailableClaim(account)
-  // const { claimTxn } = useUserHasSubmittedClaim(account ?? undefined)
-  // const showClaimPopup = useShowClaimPopup()
-
-  // const aggregateBalance: TokenAmount | undefined = useAggregateUniBalance()
-  // const countUpValue = aggregateBalance?.toFixed(0) ?? '0'
-  // const countUpValuePrevious = usePrevious(countUpValue) ?? '0'
 
   return (
     <HeaderFrame>
@@ -277,9 +268,9 @@ export default function Header() {
           >
             {t('pool')}
           </StyledNavLink>
-          <StyledExternalLink id={`stake-nav-link`} href={'https://info.snakeswap.org/'}>
-            Analitics ↗
-          </StyledExternalLink>
+          {/* <StyledExternalLink id={`stake-nav-link`} href={'https://info.snakeswap.org/'}>
+            Analytics ↗
+          </StyledExternalLink> */}
         </HeaderLinks>
       </HeaderRow>
       <HeaderControls>
