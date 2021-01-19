@@ -24,7 +24,10 @@ const store = configureStore({
     multicall,
     lists
   },
-  middleware: [...getDefaultMiddleware({ immutableCheck: false, thunk: false }), save({ states: PERSISTED_KEYS })],
+  middleware: [
+    ...getDefaultMiddleware({ immutableCheck: false, thunk: false, serializableCheck: false }),
+    save({ states: PERSISTED_KEYS })
+  ],
   preloadedState: load({ states: PERSISTED_KEYS })
 })
 
