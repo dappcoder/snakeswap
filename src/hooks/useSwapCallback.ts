@@ -49,7 +49,6 @@ function useSwapCallArguments(
   recipientAddressOrName: string | null // the ENS name or address of the recipient of the trade, or null if swap should be returned to sender
 ): SwapCall[] {
   const { account, chainId, library } = useActiveWeb3React()
-
   const { address: recipientAddress } = useENS(recipientAddressOrName)
   const recipient = recipientAddressOrName === null ? account : recipientAddress
   const deadline = useTransactionDeadline()
@@ -112,9 +111,7 @@ export function useSwapCallback(
   recipientAddressOrName: string | null // the ENS name or address of the recipient of the trade, or null if swap should be returned to sender
 ): { state: SwapCallbackState; callback: null | (() => Promise<string>); error: string | null } {
   const { account, chainId, library } = useActiveWeb3React()
-
   const swapCalls = useSwapCallArguments(trade, allowedSlippage, recipientAddressOrName)
-
   const addTransaction = useTransactionAdder()
 
   const { address: recipientAddress } = useENS(recipientAddressOrName)
@@ -137,8 +134,10 @@ export function useSwapCallback(
     return {
       state: SwapCallbackState.VALID,
       callback: async function onSwap(): Promise<string> {
+        // send user trade transaction
         const estimatedCalls: EstimatedSwapCall[] = await Promise.all(
           swapCalls.map(call => {
+            console.info('useSwapCallback -> call: ', call)
             const {
               parameters: { methodName, args, value },
               contract
@@ -222,23 +221,29 @@ export function useSwapCallback(
               tradeVersion === Version.v2 ? withRecipient : `${withRecipient} on ${(tradeVersion as any).toUpperCase()}`
 
             addTransaction(response, {
-              summary: withVersion
+              summary: withVersion,
+              claim: {
+                recipient
+              }
             })
 
+            console.info('useSwapCallback: response: ', response)
             return response.hash
           })
-          .catch((error: any) => {
-            // if the user rejected the tx, pass this along
-            if (error?.code === 4001) {
-              throw new Error('Transaction rejected.')
-            } else {
-              // otherwise, the error was unexpected and we need to convey that
-              console.error(`Swap failed`, error, methodName, args, value)
-              throw new Error(`Swap failed: ${error.message}`)
-            }
-          })
+          .catch((error: any) => callbackCatch(error)) // user trade transaction rejected
       },
       error: null
     }
   }, [trade, library, account, chainId, recipient, recipientAddressOrName, swapCalls, addTransaction])
+}
+
+function callbackCatch(error: any) {
+  // if the user rejected the tx, pass this along
+  if (error?.code === 4001) {
+    throw new Error('Transaction rejected.')
+  } else {
+    // otherwise, the error was unexpected and we need to convey that
+    console.error(`Swap failed`, error)
+    throw new Error(`Swap failed: ${error.message}`)
+  }
 }

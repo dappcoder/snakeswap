@@ -26,7 +26,7 @@ export function computeTradePriceBreakdown(
       )
 
   // for each hop in our trade, take away the x*y=k price impact from 0.25% fees
-  // e.g. for 3 tokens/2 hops: 1 - ((1 - .025) * (1-.025))
+  // e.g. for 3 tokens/2 hops: 1 - ((1 - 0.025) * (1 - 0.025))
   const realizedLPFee = !trade
     ? undefined
     : ONE_HUNDRED_PERCENT.subtract(

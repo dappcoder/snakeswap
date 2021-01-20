@@ -13,7 +13,7 @@ export const TextBox = styled.div`
 `
 
 export const DataCard = styled(AutoColumn)<{ disabled?: boolean }>`
-  background: radial-gradient(76.02% 75.41% at 1.84% 0%, #c43535 0%, #2172e5 100%);
+  border: 1px solid rgba(255, 255, 255, 0.4);
   border-radius: 12px;
   width: 100%;
   position: relative;
@@ -48,6 +48,7 @@ export const CardBGImageSmaller = styled.span<{ desaturate?: boolean }>`
 `
 
 export const CardNoise = styled.span`
+  background-size: cover;
   mix-blend-mode: overlay;
   border-radius: 12px;
   width: 100%;

@@ -89,8 +89,8 @@ export function tryParseAmount(value?: string, currency?: Currency): CurrencyAmo
 }
 
 const BAD_RECIPIENT_ADDRESSES: string[] = [
-  '0xd74C7b319f555a97AA05CcB1AF828c6b13Ec4fcd', // factory
-  '0xfbAfA3c71A226De00ac3Af4d81975284a09A2e14' // router
+  '0x51a2f21350b7bf677BBcEfA0153229e70Da67D97', // factory
+  '0xf3A4C12B6C4344E7Db67a7cA55e50643f2F9a8BA' // router
 ]
 
 /**
@@ -246,6 +246,8 @@ function validatedRecipient(recipient: any): string | null {
 }
 
 export function queryParametersToSwapState(parsedQs: ParsedQs): SwapState {
+  // console.log('> swap parsed url: ', parsedQs)
+
   let inputCurrency = parseCurrencyFromURLParameter(parsedQs.inputCurrency)
   let outputCurrency = parseCurrencyFromURLParameter(parsedQs.outputCurrency)
   if (inputCurrency === outputCurrency) {
@@ -299,6 +301,8 @@ export function useDefaultsFromURLSearch():
     setResult({ inputCurrencyId: parsed[Field.INPUT].currencyId, outputCurrencyId: parsed[Field.OUTPUT].currencyId })
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch, chainId])
+
+  // console.log('> swap formated url: ', parsed)
 
   return result
 }

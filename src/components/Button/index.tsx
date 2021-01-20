@@ -29,6 +29,8 @@ const Base = styled(RebassButton)<{
   cursor: pointer;
   position: relative;
   z-index: 1;
+  transition: 0.2s;
+
   &:disabled {
     cursor: auto;
   }
@@ -39,7 +41,7 @@ const Base = styled(RebassButton)<{
 `
 
 export const ButtonPrimary = styled(Base)`
-  background-color: ${({ theme }) => theme.primary2};
+  background-color: ${({ theme }) => theme.primary1};
   color: white;
   transition: 0.2s;
 
@@ -119,8 +121,8 @@ export const ButtonGray = styled(Base)`
 `
 
 export const ButtonSecondary = styled(Base)`
-  border: 1px solid ${({ theme }) => theme.primary4};
-  color: ${({ theme }) => theme.primary2};
+  border: 1px solid ${({ theme }) => theme.primary2};
+  color: ${({ theme }) => theme.primary1};
   background-color: transparent;
   font-size: 16px;
   border-radius: 12px;
@@ -178,17 +180,19 @@ export const ButtonUNIGradient = styled(ButtonPrimary)`
   height: 36px;
   font-weight: 500;
   background-color: ${({ theme }) => theme.bg3};
-  background: radial-gradient(174.47% 188.91% at 1.84% 0%, #ff007a 0%, #2172e5 100%), #edeef2;
+  background: radial-gradient(174.47% 188.91% at 1.84% 0%, #5b3ec5 0%, #2172e5 100%), #edeef2;
   width: fit-content;
   position: relative;
   cursor: pointer;
   border: none;
   white-space: no-wrap;
+  transition: 0.2s;
 
   :hover {
     opacity: 0.8;
   }
   :active {
+    transition: 0.02s;
     opacity: 0.9;
   }
 `
@@ -197,6 +201,7 @@ export const ButtonOutlined = styled(Base)`
   border: 1px solid ${({ theme }) => theme.bg2};
   background-color: transparent;
   color: ${({ theme }) => theme.text1};
+  transition: 0.2s;
 
   &:focus {
     box-shadow: 0 0 0 1px ${({ theme }) => theme.bg4};
@@ -205,6 +210,7 @@ export const ButtonOutlined = styled(Base)`
     box-shadow: 0 0 0 1px ${({ theme }) => theme.bg4};
   }
   &:active {
+    transition: 0.02s;
     box-shadow: 0 0 0 1px ${({ theme }) => theme.bg4};
   }
   &:disabled {
@@ -225,6 +231,9 @@ export const ButtonEmpty = styled(Base)`
     text-decoration: underline;
   }
   &:hover {
+    text-decoration: underline;
+  }
+  &:active {
     transition: 0.02s;
     text-decoration: underline;
   }
@@ -238,6 +247,7 @@ export const ButtonWhite = styled(Base)`
   border: 1px solid #edeef2;
   background-color: ${({ theme }) => theme.bg1};
   color: black;
+  transition: 0.2s;
 
   &:focus {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -247,6 +257,7 @@ export const ButtonWhite = styled(Base)`
     box-shadow: 0 0 0 1pt ${darken(0.1, '#edeef2')};
   }
   &:active {
+    transition: 0.02s;
     box-shadow: 0 0 0 1pt ${darken(0.1, '#edeef2')};
   }
   &:disabled {
@@ -259,6 +270,7 @@ const ButtonConfirmedStyle = styled(Base)`
   background-color: ${({ theme }) => lighten(0.5, theme.green1)};
   color: ${({ theme }) => theme.green1};
   border: 1px solid ${({ theme }) => theme.green1};
+  transition: 0.2s;
 
   &:disabled {
     opacity: 50%;
@@ -269,6 +281,7 @@ const ButtonConfirmedStyle = styled(Base)`
 const ButtonErrorStyle = styled(Base)`
   background-color: ${({ theme }) => theme.red1};
   border: 1px solid ${({ theme }) => theme.red1};
+  transition: 0.2s;
 
   &:focus {
     box-shadow: 0 0 0 1pt ${({ theme }) => darken(0.05, theme.red1)};
@@ -278,6 +291,7 @@ const ButtonErrorStyle = styled(Base)`
     background-color: ${({ theme }) => darken(0.05, theme.red1)};
   }
   &:active {
+    transition: 0.02s;
     box-shadow: 0 0 0 1pt ${({ theme }) => darken(0.1, theme.red1)};
     background-color: ${({ theme }) => darken(0.1, theme.red1)};
   }

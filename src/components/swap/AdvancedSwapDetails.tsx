@@ -48,6 +48,7 @@ function TradeSummary({ trade, allowedSlippage }: { trade: Trade; allowedSlippag
             </TYPE.black>
           </RowFixed>
         </RowBetween>
+
         <RowBetween>
           <RowFixed>
             <TYPE.black fontSize={14} fontWeight={400} color={theme.text2}>
@@ -117,7 +118,10 @@ export function AdvancedSwapDetails({ trade }: AdvancedSwapDetailsProps) {
             </>
           )}
           {/* <AutoColumn style={{ padding: '0 24px' }}>
-            <InfoLink href={'#' + trade.route.pairs[0].liquidityToken.address} target="_blank">
+            <InfoLink
+              href={'https://info.snakeswap.org/#/pair/' + trade.route.pairs[0].liquidityToken.address}
+              target="_blank"
+            >
               View pair analytics ↗
             </InfoLink>
           </AutoColumn> */}

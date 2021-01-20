@@ -1,25 +1,21 @@
 import { ChainId } from '@uniswap/sdk'
-import React, { useState } from 'react'
+import React from 'react'
 import { Text } from 'rebass'
 import { NavLink } from 'react-router-dom'
-import { darken } from 'polished'
+// import { darken } from 'polished'
 import { useTranslation } from 'react-i18next'
+
 import styled from 'styled-components'
 
 import Logo from '../../assets/svg/logo.svg'
 import LogoDark from '../../assets/svg/logo_white.svg'
 import { useActiveWeb3React } from '../../hooks'
-import { useDarkModeManager } from '../../state/user/hooks'
+import { useIsDarkMode } from '../../state/user/hooks'
 import { useETHBalances } from '../../state/wallet/hooks'
-// import { ExternalLink } from '../../theme'
-import { OutlineCard } from '../Card'
+import { YellowCard } from '../Card'
 import Settings from '../Settings'
-
 import Row, { RowFixed } from '../Row'
 import Web3Status from '../Web3Status'
-import ClaimModal from '../claim/ClaimModal'
-import Modal from '../Modal'
-import UniBalanceContent from './UniBalanceContent'
 
 const HeaderFrame = styled.div`
   display: grid;
@@ -31,9 +27,10 @@ const HeaderFrame = styled.div`
   width: 100%;
   top: 0;
   position: relative;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.2);
-  padding: 1.4rem;
+  padding: 1rem 3rem;
   z-index: 2;
+  border-bottom: 1px solid ${({ theme }) => theme.advancedBG};
+
   ${({ theme }) => theme.mediaWidth.upToMedium`
     grid-template-columns: 1fr;
     padding: 0 1rem;
@@ -42,7 +39,7 @@ const HeaderFrame = styled.div`
   `};
 
   ${({ theme }) => theme.mediaWidth.upToExtraSmall`
-        padding: 0.5rem 1rem;
+    padding: 0.5rem 1rem;
   `}
 `
 
@@ -60,12 +57,12 @@ const HeaderControls = styled.div`
     max-width: 960px;
     padding: 1rem;
     position: fixed;
-    bottom: 0px;
-    left: 0px;
-    width: 100%;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
     z-index: 99;
     height: 72px;
-    border-radius: 12px 12px 0 0;
+    border-radius: 18px 18px 0 0;
     background-color: ${({ theme }) => theme.bg1};
   `};
 `
@@ -73,7 +70,7 @@ const HeaderControls = styled.div`
 const HeaderElement = styled.div`
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
 
   ${({ theme }) => theme.mediaWidth.upToMedium`
    flex-direction: row-reverse;
@@ -94,10 +91,16 @@ const HeaderRow = styled(RowFixed)`
 
 const HeaderLinks = styled(Row)`
   justify-content: center;
+
   ${({ theme }) => theme.mediaWidth.upToMedium`
     padding: 1rem 0 1rem 1rem;
     justify-content: flex-end;
-`};
+
+    @media (max-width: 400px) {
+      padding: 1rem 0;
+      justify-content: space-between;
+    }
+  `};
 `
 
 const AccountElement = styled.div<{ active: boolean }>`
@@ -117,14 +120,13 @@ const AccountElement = styled.div<{ active: boolean }>`
 
 const HideSmall = styled.span`
   ${({ theme }) => theme.mediaWidth.upToSmall`
-    display: none;
+    display: none;  
   `};
 `
 
-const NetworkCard = styled(OutlineCard)`
+const NetworkCard = styled(YellowCard)`
   border-radius: 12px;
-  padding: 8px 12px;
-
+  padding: 9px 14px;
   ${({ theme }) => theme.mediaWidth.upToSmall`
     margin: 0;
     margin-right: 0.5rem;
@@ -142,7 +144,11 @@ const BalanceText = styled(Text)`
 `
 
 const Title = styled.a`
-  margin-right: 14px;
+  display: flex;
+  align-items: center;
+  pointer-events: auto;
+  justify-self: flex-start;
+  margin-right: 18px;
 
   ${({ theme }) => theme.mediaWidth.upToSmall`
     justify-self: center;
@@ -150,15 +156,19 @@ const Title = styled.a`
   :hover {
     cursor: pointer;
   }
+
+  @media (max-width: 400px) {
+    display: none;
+  }
 `
 
-const LogoIcon = styled.div`
+const SnakeswapIcon = styled.div`
   position: relative;
-  transition: transform 0.2s ease;
-  bottom: -0.1em;
+  bottom: -0.3em;
+  transition: transform 0.3s ease;
 
   :hover {
-    transform: scale(1.1);
+    transform: scale(1.2);
   }
 `
 
@@ -173,55 +183,44 @@ const StyledNavLink = styled(NavLink).attrs({
   outline: none;
   cursor: pointer;
   text-decoration: none;
-  color: ${({ theme }) => theme.text2};
+  color: ${({ theme }) => theme.text3};
   font-size: 1.3rem;
   width: fit-content;
   margin: 0 12px;
   font-weight: 500;
-  transition: 0.2s;
-
-  &.${activeClassName} {
-    border-radius: 12px;
-    font-weight: 600;
-    color: ${({ theme }) => theme.text1};
-  }
+  transition: 0.3s ease;
 
   :hover,
-  :focus {
-    color: ${({ theme }) => darken(0.1, theme.text1)};
+  :focus,
+  &.${activeClassName} {
+    color: ${({ theme }) => theme.text1};
   }
 `
 
-// const StyledExternalLink = styled(ExternalLink).attrs({
-//   activeClassName
-// })<{ isActive?: boolean }>`
+// const RedirectLink = styled.a`
 //   ${({ theme }) => theme.flexRowNoWrap}
 //   align-items: left;
-//   border-radius: 3rem;
 //   outline: none;
 //   cursor: pointer;
 //   text-decoration: none;
-//   color: ${({ theme }) => theme.text2};
+//   white-space: nowrap;
+//   color: ${({ theme }) => theme.text3};
 //   font-size: 1.3rem;
 //   width: fit-content;
 //   margin: 0 12px;
 //   font-weight: 500;
-//   transition: 0.2s;
+//   transition: 0.3s ease;
 
 //   &.${activeClassName} {
-//     border-radius: 12px;
 //     font-weight: 600;
 //     color: ${({ theme }) => theme.text1};
 //   }
 
-//   :hover,
-//   :focus {
+//   :focus,
+//   :hover {
+//     text-decoration: underline;
 //     color: ${({ theme }) => darken(0.1, theme.text1)};
 //   }
-
-//   ${({ theme }) => theme.mediaWidth.upToExtraSmall`
-//       display: none;
-// `}
 // `
 
 const NETWORK_LABELS: { [chainId in ChainId]?: string } = {
@@ -232,29 +231,25 @@ const NETWORK_LABELS: { [chainId in ChainId]?: string } = {
 }
 
 export default function Header() {
+  const darkMode = useIsDarkMode()
   const { account, chainId } = useActiveWeb3React()
   const { t } = useTranslation()
-
   const userEthBalance = useETHBalances(account ? [account] : [])?.[account ?? '']
-  const [isDark] = useDarkModeManager()
-  const [showUniBalanceModal, setShowUniBalanceModal] = useState(false)
 
   return (
     <HeaderFrame>
-      <ClaimModal />
-      <Modal isOpen={showUniBalanceModal} onDismiss={() => setShowUniBalanceModal(false)}>
-        <UniBalanceContent setShowUniBalanceModal={setShowUniBalanceModal} />
-      </Modal>
       <HeaderRow>
         <Title href=".">
-          <LogoIcon>
-            <img width={'35px'} src={isDark ? LogoDark : Logo} alt="logo" />
-          </LogoIcon>
+          <SnakeswapIcon>
+            <img width={'36px'} src={darkMode ? LogoDark : Logo} alt="logo" />
+          </SnakeswapIcon>
         </Title>
+
         <HeaderLinks>
           <StyledNavLink id={`swap-nav-link`} to={'/swap'}>
             {t('swap')}
           </StyledNavLink>
+
           <StyledNavLink
             id={`pool-nav-link`}
             to={'/pool'}
@@ -268,11 +263,13 @@ export default function Header() {
           >
             {t('pool')}
           </StyledNavLink>
-          {/* <StyledExternalLink id={`stake-nav-link`} href={'https://info.snakeswap.org/'}>
-            Analytics ↗
-          </StyledExternalLink> */}
+
+          {/* <RedirectLink href={'https://info.snakeswap.org/'} target="_blank">
+            {t('analytics')}
+          </RedirectLink> */}
         </HeaderLinks>
       </HeaderRow>
+
       <HeaderControls>
         <HeaderElement>
           <HideSmall>

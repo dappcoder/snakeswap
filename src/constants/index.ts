@@ -6,7 +6,7 @@ import { fortmatic, injected, portis, walletconnect, walletlink } from '../conne
  * env.production
  *
  * REACT_APP_CHAIN_ID="1"
- * REACT_APP_NETWORK_URL="https://mainnet.infura.io/v3/719c0a3ff5e84104a4d5900296f20f66"
+ * REACT_APP_NETWORK_URL=""
  */
 
 /**
@@ -24,19 +24,18 @@ import { fortmatic, injected, portis, walletconnect, walletlink } from '../conne
 /**
  * Ropsten
  *
- * FACTORY_ADDRESS: 0xd74C7b319f555a97AA05CcB1AF828c6b13Ec4fcd
+ * FACTORY_ADDRESS: 0x51a2f21350b7bf677BBcEfA0153229e70Da67D97
  * INIT_CODE_HASH: 0x495bd29cbddd5cd4ff6c8cafd6f2e1e218cf2d5eb2eddd2cfd41ba02aa8fd1d4
+ *
  * feeToSetter: 0x57d49704F453CdD2b995280d9D7F557E42847d82
  * feeTo: 0x8D388D9D3b306e7a509620ad508716519f5B87c5
  *
  * WETH: 0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2
- * Router: 0xfbAfA3c71A226De00ac3Af4d81975284a09A2e14
+ * Router: 0xf3A4C12B6C4344E7Db67a7cA55e50643f2F9a8BA
  */
 
-export const ROUTER_ADDRESS = '0xfbAfA3c71A226De00ac3Af4d81975284a09A2e14'
+export const ROUTER_ADDRESS = '0xf3A4C12B6C4344E7Db67a7cA55e50643f2F9a8BA'
 export const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000'
-
-export { PRELOADED_PROPOSALS } from './proposals'
 
 // a list of tokens by chain
 type ChainTokenList = {
@@ -52,7 +51,7 @@ export const AMPL = new Token(ChainId.MAINNET, '0xD46bA6D942050d489DBd938a2C909A
 export const WBTC = new Token(ChainId.MAINNET, '0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599', 8, 'WBTC', 'Wrapped BTC')
 
 // Block time here is slightly higher (~1s) than average in order to avoid ongoing proposals past the displayed time
-export const AVERAGE_BLOCK_TIME_IN_SECS = 13
+export const AVERAGE_BLOCK_TIME_IN_SECS = 14
 export const PROPOSAL_LENGTH_IN_BLOCKS = 40_320
 export const PROPOSAL_LENGTH_IN_SECS = AVERAGE_BLOCK_TIME_IN_SECS * PROPOSAL_LENGTH_IN_BLOCKS
 
@@ -66,18 +65,18 @@ export const UNI: { [chainId in ChainId]: Token } = {
   [ChainId.RINKEBY]: new Token(ChainId.RINKEBY, UNI_ADDRESS, 18, 'UNI', 'Uniswap'),
   [ChainId.ROPSTEN]: new Token(ChainId.ROPSTEN, UNI_ADDRESS, 18, 'UNI', 'Uniswap'),
   [ChainId.GÖRLI]: new Token(ChainId.GÖRLI, UNI_ADDRESS, 18, 'UNI', 'Uniswap'),
-  [ChainId.KOVAN]: new Token(ChainId.KOVAN, UNI_ADDRESS, 18, 'UNI', 'Uniswap')
+  [ChainId.KOVAN]: new Token(ChainId.KOVAN, UNI_ADDRESS, 18, 'UNI', 'Uniswap'),
 }
 
 export const COMMON_CONTRACT_NAMES: { [address: string]: string } = {
   [UNI_ADDRESS]: 'UNI',
   [GOVERNANCE_ADDRESS]: 'Governance',
-  [TIMELOCK_ADDRESS]: 'Timelock'
+  [TIMELOCK_ADDRESS]: 'Timelock',
 }
 
 // TODO: specify merkle distributor for mainnet
 export const MERKLE_DISTRIBUTOR_ADDRESS: { [chainId in ChainId]?: string } = {
-  [ChainId.MAINNET]: '0x090D4613473dEE047c3f2706764f49E0821D256e'
+  [ChainId.MAINNET]: '0x090D4613473dEE047c3f2706764f49E0821D256e',
 }
 
 const WETH_ONLY: ChainTokenList = {
@@ -85,13 +84,13 @@ const WETH_ONLY: ChainTokenList = {
   [ChainId.ROPSTEN]: [WETH[ChainId.ROPSTEN]],
   [ChainId.RINKEBY]: [WETH[ChainId.RINKEBY]],
   [ChainId.GÖRLI]: [WETH[ChainId.GÖRLI]],
-  [ChainId.KOVAN]: [WETH[ChainId.KOVAN]]
+  [ChainId.KOVAN]: [WETH[ChainId.KOVAN]],
 }
 
 // used to construct intermediary pairs for trading
 export const BASES_TO_CHECK_TRADES_AGAINST: ChainTokenList = {
   ...WETH_ONLY,
-  [ChainId.MAINNET]: [...WETH_ONLY[ChainId.MAINNET], DAI, USDC, USDT, COMP, MKR]
+  [ChainId.MAINNET]: [...WETH_ONLY[ChainId.MAINNET], DAI, USDC, USDT, COMP, MKR],
 }
 
 /**
@@ -100,31 +99,31 @@ export const BASES_TO_CHECK_TRADES_AGAINST: ChainTokenList = {
  */
 export const CUSTOM_BASES: { [chainId in ChainId]?: { [tokenAddress: string]: Token[] } } = {
   [ChainId.MAINNET]: {
-    [AMPL.address]: [DAI, WETH[ChainId.MAINNET]]
-  }
+    [AMPL.address]: [DAI, WETH[ChainId.MAINNET]],
+  },
 }
 
 // used for display in the default list when adding liquidity
 export const SUGGESTED_BASES: ChainTokenList = {
   ...WETH_ONLY,
-  [ChainId.MAINNET]: [...WETH_ONLY[ChainId.MAINNET], DAI, USDC, USDT]
+  [ChainId.MAINNET]: [...WETH_ONLY[ChainId.MAINNET], DAI, USDC, USDT],
 }
 
 // used to construct the list of all pairs we consider by default in the frontend
 export const BASES_TO_TRACK_LIQUIDITY_FOR: ChainTokenList = {
   ...WETH_ONLY,
-  [ChainId.MAINNET]: [...WETH_ONLY[ChainId.MAINNET], DAI, USDC, USDT]
+  [ChainId.MAINNET]: [...WETH_ONLY[ChainId.MAINNET], DAI, USDC, USDT],
 }
 
 export const PINNED_PAIRS: { readonly [chainId in ChainId]?: [Token, Token][] } = {
   [ChainId.MAINNET]: [
     [
       new Token(ChainId.MAINNET, '0x5d3a536E4D6DbD6114cc1Ead35777bAB948E3643', 8, 'cDAI', 'Compound Dai'),
-      new Token(ChainId.MAINNET, '0x39AA39c021dfbaE8faC545936693aC917d5E7563', 8, 'cUSDC', 'Compound USD Coin')
+      new Token(ChainId.MAINNET, '0x39AA39c021dfbaE8faC545936693aC917d5E7563', 8, 'cUSDC', 'Compound USD Coin'),
     ],
     [USDC, USDT],
-    [DAI, USDT]
-  ]
+    [DAI, USDT],
+  ],
 }
 
 export interface WalletInfo {
@@ -147,7 +146,7 @@ export const SUPPORTED_WALLETS: { [key: string]: WalletInfo } = {
     description: 'Injected web3 provider.',
     href: null,
     color: '#010101',
-    primary: true
+    primary: true,
   },
   METAMASK: {
     connector: injected,
@@ -155,7 +154,7 @@ export const SUPPORTED_WALLETS: { [key: string]: WalletInfo } = {
     iconName: 'metamask.png',
     description: 'Easy-to-use browser extension.',
     href: null,
-    color: '#E8831D'
+    color: '#E8831D',
   },
   WALLET_CONNECT: {
     connector: walletconnect,
@@ -164,7 +163,7 @@ export const SUPPORTED_WALLETS: { [key: string]: WalletInfo } = {
     description: 'Connect to Trust Wallet, Rainbow Wallet and more...',
     href: null,
     color: '#4196FC',
-    mobile: true
+    mobile: true,
   },
   WALLET_LINK: {
     connector: walletlink,
@@ -172,7 +171,7 @@ export const SUPPORTED_WALLETS: { [key: string]: WalletInfo } = {
     iconName: 'coinbaseWalletIcon.svg',
     description: 'Use Coinbase Wallet app on mobile device',
     href: null,
-    color: '#315CF5'
+    color: '#315CF5',
   },
   COINBASE_LINK: {
     name: 'Open in Coinbase Wallet',
@@ -181,7 +180,7 @@ export const SUPPORTED_WALLETS: { [key: string]: WalletInfo } = {
     href: 'https://go.cb-w.com/mtUDhEZPy1',
     color: '#315CF5',
     mobile: true,
-    mobileOnly: true
+    mobileOnly: true,
   },
   FORTMATIC: {
     connector: fortmatic,
@@ -190,7 +189,7 @@ export const SUPPORTED_WALLETS: { [key: string]: WalletInfo } = {
     description: 'Login using Fortmatic hosted wallet',
     href: null,
     color: '#6748FF',
-    mobile: true
+    mobile: true,
   },
   Portis: {
     connector: portis,
@@ -199,22 +198,18 @@ export const SUPPORTED_WALLETS: { [key: string]: WalletInfo } = {
     description: 'Login using Portis hosted wallet',
     href: null,
     color: '#4A6C9B',
-    mobile: true
-  }
+    mobile: true,
+  },
 }
 
 export const NetworkContextName = 'NETWORK'
-
 // default allowed slippage, in bips
 export const INITIAL_ALLOWED_SLIPPAGE = 50
 // 20 minutes, denominated in seconds
 export const DEFAULT_DEADLINE_FROM_NOW = 60 * 20
-
 // used for rewards deadlines
 export const BIG_INT_SECONDS_IN_WEEK = JSBI.BigInt(60 * 60 * 24 * 7)
-
 export const BIG_INT_ZERO = JSBI.BigInt(0)
-
 // one basis point
 export const ONE_BIPS = new Percent(JSBI.BigInt(1), JSBI.BigInt(10000))
 export const BIPS_BASE = JSBI.BigInt(10000)
@@ -226,7 +221,6 @@ export const ALLOWED_PRICE_IMPACT_HIGH: Percent = new Percent(JSBI.BigInt(500), 
 export const PRICE_IMPACT_WITHOUT_FEE_CONFIRM_MIN: Percent = new Percent(JSBI.BigInt(1000), BIPS_BASE) // 10%
 // for non expert mode disable swaps above this
 export const BLOCKED_PRICE_IMPACT_NON_EXPERT: Percent = new Percent(JSBI.BigInt(1500), BIPS_BASE) // 15%
-
 // used to ensure the user doesn't send so much ETH so they end up with <.01
 export const MIN_ETH: JSBI = JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(16)) // .01 ETH
 export const BETTER_TRADE_LINK_THRESHOLD = new Percent(JSBI.BigInt(75), JSBI.BigInt(10000))
@@ -236,5 +230,5 @@ export const BLOCKED_ADDRESSES: string[] = [
   '0x7F367cC41522cE07553e823bf3be79A889DEbe1B',
   '0xd882cFc20F52f2599D84b8e8D58C7FB62cfE344b',
   '0x901bb9583b24D97e995513C6778dc6888AB6870e',
-  '0xA7e5d5A720f06526557c513402f2e6B5fA20b008'
+  '0xA7e5d5A720f06526557c513402f2e6B5fA20b008',
 ]

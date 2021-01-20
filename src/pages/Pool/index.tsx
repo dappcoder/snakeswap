@@ -11,14 +11,13 @@ import { StyledInternalLink, TYPE, HideSmall } from '../../theme' // { ExternalL
 import { Text } from 'rebass'
 import Card from '../../components/Card'
 import { RowBetween, RowFixed } from '../../components/Row'
-import { ButtonSecondary } from '../../components/Button'
+import { ButtonPrimary } from '../../components/Button' // { ButtonSecondary }
 import { AutoColumn } from '../../components/Column'
-
 import { useActiveWeb3React } from '../../hooks'
 import { usePairs } from '../../data/Reserves'
 import { toV2LiquidityToken, useTrackedTokenPairs } from '../../state/user/hooks'
 import { Dots } from '../../components/swap/styleds'
-import { CardSection } from '../../components/earn/styled'
+import { CardSection, DataCard } from '../../components/earn/styled'
 import { useStakingInfo } from '../../state/stake/hooks'
 import { BIG_INT_ZERO } from '../../constants'
 
@@ -27,11 +26,12 @@ const PageWrapper = styled(AutoColumn)`
   width: 100%;
 `
 
-const VoteCard = styled.div`
-  background: linear-gradient(to bottom, #d85252 2%, ${({ theme }) => theme.bg1} 2%);
-  border-radius: 12px;
-  color: #000;
+const VoteCard = styled(DataCard)`
   overflow: hidden;
+  border: none;
+  border-radius: 12px;
+  background-color: ${({ theme }) => theme.bg1};
+  background: linear-gradient(to bottom, #d85252 2%, ${({ theme }) => theme.bg1} 2%);
 `
 
 const TitleRow = styled(RowBetween)`
@@ -44,7 +44,7 @@ const TitleRow = styled(RowBetween)`
 `
 
 const ButtonRow = styled(RowFixed)`
-  gap: 8px;
+  gap: 6px;
   ${({ theme }) => theme.mediaWidth.upToSmall`
     width: 100%;
     flex-direction: row-reverse;
@@ -52,8 +52,9 @@ const ButtonRow = styled(RowFixed)`
   `};
 `
 
-const ResponsiveButtonSecondary = styled(ButtonSecondary)`
+const ResponsiveButtonPrimary = styled(ButtonPrimary)`
   width: fit-content;
+
   ${({ theme }) => theme.mediaWidth.upToSmall`
     width: 48%;
   `};
@@ -126,9 +127,7 @@ export default function Pool() {
           <CardSection>
             <AutoColumn gap="md">
               <RowBetween>
-                <TYPE.mediumHeader fontWeight={600} color={theme.text1}>
-                  Liquidity provider rewards
-                </TYPE.mediumHeader>
+                <TYPE.largeHeader fontWeight={600}>Liquidity provider rewards</TYPE.largeHeader>
               </RowBetween>
               <RowBetween>
                 <TYPE.body>
@@ -148,14 +147,14 @@ export default function Pool() {
                 </TYPE.mediumHeader>
               </HideSmall>
               <ButtonRow>
-                <ResponsiveButtonSecondary as={Link} padding="8px 10px" to="/create/ETH">
+                <ResponsiveButtonPrimary as={Link} padding="10px 18px" to="/create/ETH">
                   Create a pair
-                </ResponsiveButtonSecondary>
-                <ResponsiveButtonSecondary id="join-pool-button" as={Link} padding="8px 10px" to="/add/ETH">
+                </ResponsiveButtonPrimary>
+                <ResponsiveButtonPrimary id="join-pool-button" as={Link} padding="10px 18px" to="/add/ETH">
                   <Text fontWeight={500} fontSize={16}>
                     Add Liquidity
                   </Text>
-                </ResponsiveButtonSecondary>
+                </ResponsiveButtonPrimary>
               </ButtonRow>
             </TitleRow>
 
@@ -175,7 +174,9 @@ export default function Pool() {
               <>
                 {/* <ButtonSecondary>
                   <RowBetween>
-                    <ExternalLink href={'#' + account}>Account analytics and accrued fees</ExternalLink>
+                    <ExternalLink href={'https://info.snakeswap.org/#/account/' + account}>
+                      Account analytics and accrued fees
+                    </ExternalLink>
                     <span> ↗</span>
                   </RowBetween>
                 </ButtonSecondary> */}

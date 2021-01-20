@@ -11,7 +11,10 @@ import { ThemeContext } from 'styled-components'
 import { ButtonPrimary, ButtonLight, ButtonError, ButtonConfirmed } from '../../components/Button'
 import { LightCard } from '../../components/Card'
 import { AutoColumn, ColumnCenter } from '../../components/Column'
-import TransactionConfirmationModal, { ConfirmationModalContent } from '../../components/TransactionConfirmationModal'
+import TransactionConfirmationModal, {
+  ConfirmationModalContent,
+  TransactionErrorContent
+} from '../../components/TransactionConfirmationModal'
 import CurrencyInputPanel from '../../components/CurrencyInputPanel'
 import DoubleCurrencyLogo from '../../components/DoubleLogo'
 import { AddRemoveTabs } from '../../components/NavigationTabs'
@@ -43,6 +46,7 @@ import { Field } from '../../state/burn/actions'
 import { useWalletModalToggle } from '../../state/application/hooks'
 import { useUserSlippageTolerance } from '../../state/user/hooks'
 import { BigNumber } from '@ethersproject/bignumber'
+import { useAllTransactions } from '../../state/transactions/hooks'
 
 export default function RemoveLiquidity({
   history,
@@ -71,6 +75,8 @@ export default function RemoveLiquidity({
 
   // modal and loading
   const [showConfirm, setShowConfirm] = useState<boolean>(false)
+  const [showError, setShowError] = useState<boolean>(false)
+  const [errorMessage, setErrorMessage] = useState<string>('')
   const [showDetailed, setShowDetailed] = useState<boolean>(false)
   const [attemptingTxn, setAttemptingTxn] = useState(false) // clicked confirm
 
@@ -101,12 +107,13 @@ export default function RemoveLiquidity({
   // allowance handling
   const [signatureData, setSignatureData] = useState<{ v: number; r: string; s: string; deadline: number } | null>(null)
   const [approval, approveCallback] = useApproveCallback(parsedAmounts[Field.LIQUIDITY], ROUTER_ADDRESS)
-
   const isArgentWallet = useIsArgentWallet()
 
   async function onAttemptToApprove() {
     if (!pairContract || !pair || !library || !deadline) throw new Error('missing dependencies')
+
     const liquidityAmount = parsedAmounts[Field.LIQUIDITY]
+
     if (!liquidityAmount) throw new Error('missing liquidity amount')
 
     if (isArgentWallet) {
@@ -123,7 +130,7 @@ export default function RemoveLiquidity({
       { name: 'verifyingContract', type: 'address' }
     ]
     const domain = {
-      name: 'Uniswap V2',
+      name: 'Uniswap V2', // the same as ERC20 contract's 'constant name'
       version: '1',
       chainId: chainId,
       verifyingContract: pair.liquidityToken.address
@@ -192,6 +199,7 @@ export default function RemoveLiquidity({
 
   // tx sending
   const addTransaction = useTransactionAdder()
+
   async function onRemove() {
     if (!chainId || !library || !account || !deadline) throw new Error('missing dependencies')
     const { [Field.CURRENCY_A]: currencyAmountA, [Field.CURRENCY_B]: currencyAmountB } = parsedAmounts
@@ -215,6 +223,7 @@ export default function RemoveLiquidity({
     if (!tokenA || !tokenB) throw new Error('could not wrap')
 
     let methodNames: string[], args: Array<string | string[] | number | boolean>
+
     // we have approval, use normal remove liquidity
     if (approval === ApprovalState.APPROVED) {
       // removeLiquidityETH
@@ -245,24 +254,25 @@ export default function RemoveLiquidity({
     }
     // we have a signataure, use permit versions of remove liquidity
     else if (signatureData !== null) {
-      // removeLiquidityETHWithPermit
       if (oneCurrencyIsETH) {
         methodNames = ['removeLiquidityETHWithPermit', 'removeLiquidityETHWithPermitSupportingFeeOnTransferTokens']
         args = [
+          // token address
           currencyBIsETH ? tokenA.address : tokenB.address,
           liquidityAmount.raw.toString(),
+          // token amount
           amountsMin[currencyBIsETH ? Field.CURRENCY_A : Field.CURRENCY_B].toString(),
+          // eth amount
           amountsMin[currencyBIsETH ? Field.CURRENCY_B : Field.CURRENCY_A].toString(),
           account,
           signatureData.deadline,
+          // approve max ?
           false,
           signatureData.v,
           signatureData.r,
           signatureData.s
         ]
-      }
-      // removeLiquidityETHWithPermit
-      else {
+      } else {
         methodNames = ['removeLiquidityWithPermit']
         args = [
           tokenA.address,
@@ -287,6 +297,9 @@ export default function RemoveLiquidity({
         router.estimateGas[methodName](...args)
           .then(calculateGasMargin)
           .catch(error => {
+            setErrorMessage(error.message)
+            setShowError(true)
+            handleDismissConfirmation()
             console.error(`estimateGas failed`, methodName, args, error)
             return undefined
           })
@@ -466,10 +479,21 @@ export default function RemoveLiquidity({
     setTxHash('')
   }, [onUserInput, txHash])
 
+  const handleErrorConfirmation = () => {
+    setShowError(false)
+    setErrorMessage('')
+  }
+
   const [innerLiquidityPercentage, setInnerLiquidityPercentage] = useDebouncedChangeHandler(
     Number.parseInt(parsedAmounts[Field.LIQUIDITY_PERCENT].toFixed(0)),
     liquidityPercentChangeCallback
   )
+
+  const allTransactions = useAllTransactions()
+  const pending = Object.values(allTransactions)
+    .filter(tx => !tx.receipt)
+    .map(tx => tx.hash)
+  const hasPendingTransactions = !!pending.length
 
   return (
     <>
@@ -489,6 +513,14 @@ export default function RemoveLiquidity({
                 bottomContent={modalBottom}
               />
             )}
+            pendingText={pendingText}
+          />
+          <TransactionConfirmationModal
+            isOpen={showError}
+            onDismiss={handleErrorConfirmation}
+            attemptingTxn={attemptingTxn}
+            hash={txHash ? txHash : ''}
+            content={() => <TransactionErrorContent onDismiss={handleErrorConfirmation} message={errorMessage} />}
             pendingText={pendingText}
           />
           <AutoColumn gap="md">
@@ -654,12 +686,16 @@ export default function RemoveLiquidity({
                   <ButtonConfirmed
                     onClick={onAttemptToApprove}
                     confirmed={approval === ApprovalState.APPROVED || signatureData !== null}
-                    disabled={approval !== ApprovalState.NOT_APPROVED || signatureData !== null}
+                    disabled={
+                      hasPendingTransactions || approval !== ApprovalState.NOT_APPROVED || signatureData !== null
+                    }
                     mr="0.5rem"
                     fontWeight={500}
                     fontSize={16}
                   >
-                    {approval === ApprovalState.PENDING ? (
+                    {hasPendingTransactions ? (
+                      <Dots>Pending</Dots>
+                    ) : approval === ApprovalState.PENDING ? (
                       <Dots>Approving</Dots>
                     ) : approval === ApprovalState.APPROVED || signatureData !== null ? (
                       'Approved'

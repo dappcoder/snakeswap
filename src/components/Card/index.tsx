@@ -14,7 +14,7 @@ const Card = styled(Box)<{ padding?: string; border?: string; borderRadius?: str
 export default Card
 
 export const LightCard = styled(Card)`
-  border: 1px solid ${({ theme }) => theme.bg2};
+  border: 1px solid ${({ theme }) => theme.bg3};
   background-color: ${({ theme }) => theme.bg1};
 `
 
@@ -48,7 +48,7 @@ const BlueCardStyled = styled(Card)`
 export const BlueCard = ({ children, ...rest }: CardProps) => {
   return (
     <BlueCardStyled {...rest}>
-      <Text fontWeight={500} color="#C43535">
+      <Text fontWeight={500} color="#2172E5">
         {children}
       </Text>
     </BlueCardStyled>

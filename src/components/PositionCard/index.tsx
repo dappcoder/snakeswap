@@ -14,9 +14,7 @@ import { currencyId } from '../../utils/currencyId'
 import { unwrappedToken } from '../../utils/wrappedCurrency'
 import { ButtonPrimary, ButtonEmpty, ButtonUNIGradient } from '../Button' // { ButtonSecondary }
 import { CardNoise } from '../earn/styled'
-
 import { useColor } from '../../hooks/useColor'
-
 import Card, { GreyCard, LightCard } from '../Card'
 import { AutoColumn } from '../Column'
 import CurrencyLogo from '../CurrencyLogo'
@@ -37,6 +35,7 @@ export const HoverCard = styled(Card)`
 `
 const StyledPositionCard = styled(LightCard)<{ bgColor: any }>`
   border: none;
+  background-color: ${({ theme }) => theme.bg1};
   position: relative;
   overflow: hidden;
 `
@@ -212,16 +211,16 @@ export default function FullPositionCard({ pair, border, stakedBalance }: Positi
           </AutoRow>
 
           <RowFixed gap="8px">
-            <ButtonEmpty padding="8px 10px" width="fit-content" onClick={() => setShowMore(!showMore)}>
+            <ButtonEmpty padding="6px 8px" width="fit-content" onClick={() => setShowMore(!showMore)}>
               {showMore ? (
                 <>
                   Manage
-                  <ChevronUp size="30" style={{ marginLeft: '10px' }} />
+                  <ChevronUp size="35" style={{ marginLeft: '10px' }} />
                 </>
               ) : (
                 <>
                   Manage
-                  <ChevronDown size="30" style={{ marginLeft: '10px' }} />
+                  <ChevronDown size="35" style={{ marginLeft: '10px' }} />
                 </>
               )}
             </ButtonEmpty>
@@ -298,9 +297,9 @@ export default function FullPositionCard({ pair, border, stakedBalance }: Positi
             {/* <ButtonSecondary padding="8px">
               <ExternalLink
                 style={{ width: '100%', textAlign: 'center' }}
-                href={'#'} // `https://uniswap.info/account/${account}`
+                href={`https://info.snakeswap.org/#/account/${account}`}
               >
-                View accrued fees and analytics<span style={{ fontSize: '11px' }}>↗</span>
+                View accrued fees and analytics<span style={{ fontSize: '12px' }}>↗</span>
               </ExternalLink>
             </ButtonSecondary> */}
             {userDefaultPoolBalance && JSBI.greaterThan(userDefaultPoolBalance.raw, BIG_INT_ZERO) && (
@@ -322,16 +321,6 @@ export default function FullPositionCard({ pair, border, stakedBalance }: Positi
                   Remove
                 </ButtonPrimary>
               </RowBetween>
-            )}
-            {stakedBalance && JSBI.greaterThan(stakedBalance.raw, BIG_INT_ZERO) && (
-              <ButtonPrimary
-                padding="8px"
-                as={Link}
-                to={`/uni/${currencyId(currency0)}/${currencyId(currency1)}`}
-                width="100%"
-              >
-                Manage Liquidity in Rewards Pool
-              </ButtonPrimary>
             )}
           </AutoColumn>
         )}

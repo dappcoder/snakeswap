@@ -1,11 +1,10 @@
 import React, { useRef } from 'react'
-import { BookOpen, Code, Info, MessageCircle, PieChart } from 'react-feather'
+import { BookOpen, Code, Info, PieChart } from 'react-feather'
 import styled from 'styled-components'
 import { ReactComponent as MenuIcon } from '../../assets/images/menu.svg'
 import { useOnClickOutside } from '../../hooks/useOnClickOutside'
 import { ApplicationModal } from '../../state/application/actions'
 import { useModalOpen, useToggleModal } from '../../state/application/hooks'
-
 import { ExternalLink } from '../../theme'
 
 const StyledMenuIcon = styled(MenuIcon)`
@@ -90,7 +89,6 @@ export default function Menu() {
   useOnClickOutside(node, open ? toggle : undefined)
 
   return (
-    // https://github.com/DefinitelyTyped/DefinitelyTyped/issues/30451
     <StyledMenu ref={node as any}>
       <StyledMenuButton onClick={toggle}>
         <StyledMenuIcon />
@@ -98,23 +96,19 @@ export default function Menu() {
 
       {open && (
         <MenuFlyout>
-          <MenuItem id="link" href="#">
+          <MenuItem id="link" href="">
             <Info size={14} />
             About
           </MenuItem>
-          <MenuItem id="link" href="#">
+          <MenuItem id="link" href="">
             <BookOpen size={14} />
             Docs
           </MenuItem>
-          <MenuItem id="link" href="#">
+          <MenuItem id="link" href="">
             <Code size={14} />
             Code
           </MenuItem>
-          <MenuItem id="link" href="#">
-            <MessageCircle size={14} />
-            Discord
-          </MenuItem>
-          <MenuItem id="link" href="#">
+          <MenuItem id="link" href="">
             <PieChart size={14} />
             Analytics
           </MenuItem>

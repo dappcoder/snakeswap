@@ -8,7 +8,6 @@ import { isAddress } from '../utils'
 
 import { useActiveWeb3React } from './index'
 import { useBytes32TokenContract, useTokenContract } from './useContract'
-import { arrayify } from 'ethers/lib/utils'
 
 export function useAllTokens(): { [address: string]: Token } {
   const { chainId } = useActiveWeb3React()
@@ -41,12 +40,10 @@ export function useIsUserAddedToken(currency: Currency): boolean {
 
 // parse a name or symbol from a token response
 const BYTES32_REGEX = /^0x[a-fA-F0-9]{64}$/
-
 function parseStringOrBytes32(str: string | undefined, bytes32: string | undefined, defaultValue: string): string {
   return str && str.length > 0
     ? str
-    : // need to check for proper bytes string and valid terminator
-    bytes32 && BYTES32_REGEX.test(bytes32) && arrayify(bytes32)[31] === 0
+    : bytes32 && BYTES32_REGEX.test(bytes32)
     ? parseBytes32String(bytes32)
     : defaultValue
 }
