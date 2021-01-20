@@ -37,7 +37,10 @@ export default function SwapModalFooter({
     allowedSlippage,
     trade
   ])
-  const { priceImpactWithoutFee, realizedLPFee } = useMemo(() => computeTradePriceBreakdown(trade), [trade])
+  const { priceImpactWithoutFee, realizedProtocolFee, realizedLPFee } = useMemo(
+    () => computeTradePriceBreakdown(trade),
+    [trade]
+  )
   const severity = warningSeverity(priceImpactWithoutFee)
 
   return (
@@ -73,6 +76,7 @@ export default function SwapModalFooter({
             </TYPE.black>
             <QuestionHelper text="Your transaction will revert if there is a large, unfavorable price movement before it is confirmed." />
           </RowFixed>
+
           <RowFixed>
             <TYPE.black fontSize={14}>
               {trade.tradeType === TradeType.EXACT_INPUT
@@ -86,6 +90,7 @@ export default function SwapModalFooter({
             </TYPE.black>
           </RowFixed>
         </RowBetween>
+
         <RowBetween>
           <RowFixed>
             <TYPE.black color={theme.text2} fontSize={14} fontWeight={400}>
@@ -95,12 +100,25 @@ export default function SwapModalFooter({
           </RowFixed>
           <FormattedPriceImpact priceImpact={priceImpactWithoutFee} />
         </RowBetween>
+
+        <RowBetween>
+          <RowFixed>
+            <TYPE.black fontSize={14} fontWeight={400} color={theme.text2}>
+              Protocol fee
+            </TYPE.black>
+            <QuestionHelper text="Protocol commission in the amount of (0.05%)." />
+          </RowFixed>
+          <TYPE.black fontSize={14}>
+            {realizedProtocolFee ? `${realizedProtocolFee.toSignificant(4)} ${trade.inputAmount.currency.symbol}` : '-'}
+          </TYPE.black>
+        </RowBetween>
+
         <RowBetween>
           <RowFixed>
             <TYPE.black fontSize={14} fontWeight={400} color={theme.text2}>
               Liquidity Provider Fee
             </TYPE.black>
-            <QuestionHelper text="A portion of each trade (0.30%) goes to liquidity providers as a protocol incentive." />
+            <QuestionHelper text="A portion of each trade (0.25%) goes to liquidity providers as a protocol incentive." />
           </RowFixed>
           <TYPE.black fontSize={14}>
             {realizedLPFee ? realizedLPFee?.toSignificant(6) + ' ' + trade.inputAmount.currency.symbol : '-'}

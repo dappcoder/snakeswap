@@ -1,9 +1,39 @@
 import { ChainId, JSBI, Percent, Token, WETH } from '@uniswap/sdk'
 import { AbstractConnector } from '@web3-react/abstract-connector'
-
 import { fortmatic, injected, portis, walletconnect, walletlink } from '../connectors'
 
-export const ROUTER_ADDRESS = '0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D'
+/**
+ * env.production
+ *
+ * REACT_APP_CHAIN_ID="1"
+ * REACT_APP_NETWORK_URL="https://mainnet.infura.io/v3/719c0a3ff5e84104a4d5900296f20f66"
+ */
+
+/**
+ * Mainnet
+ *
+ * FACTORY_ADDRESS:
+ * INIT_CODE_HASH:
+ * feeToSetter: 0x57d49704F453CdD2b995280d9D7F557E42847d82
+ * feeTo: 0x8D388D9D3b306e7a509620ad508716519f5B87c5
+ *
+ * WETH: 0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2
+ * Router:
+ */
+
+/**
+ * Ropsten
+ *
+ * FACTORY_ADDRESS: 0xd74C7b319f555a97AA05CcB1AF828c6b13Ec4fcd
+ * INIT_CODE_HASH: 0x495bd29cbddd5cd4ff6c8cafd6f2e1e218cf2d5eb2eddd2cfd41ba02aa8fd1d4
+ * feeToSetter: 0x57d49704F453CdD2b995280d9D7F557E42847d82
+ * feeTo: 0x8D388D9D3b306e7a509620ad508716519f5B87c5
+ *
+ * WETH: 0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2
+ * Router: 0xfbAfA3c71A226De00ac3Af4d81975284a09A2e14
+ */
+
+export const ROUTER_ADDRESS = '0xfbAfA3c71A226De00ac3Af4d81975284a09A2e14'
 export const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000'
 
 export { PRELOADED_PROPOSALS } from './proposals'
