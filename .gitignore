@@ -1,5 +1,6 @@
 # dependencies
 /node_modules
+./forks/@uniswap/sdk/node_modules
 
 # testing
 /coverage
