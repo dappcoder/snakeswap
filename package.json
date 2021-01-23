@@ -1,7 +1,7 @@
 {
   "name": "snakewap",
-  "description": "Snakeswap Interface",
-  "homepage": "https://snakeswap.org",
+  "description": "Snakeswap Exchange",
+  "homepage": "https://app.snakeswap.org",
   "private": true,
   "devDependencies": {
     "@ethersproject/bignumber": "^5.0.5",
