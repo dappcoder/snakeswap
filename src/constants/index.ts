@@ -51,7 +51,8 @@ import { fortmatic, injected, portis, walletconnect, walletlink } from '../conne
  * kovan: 0xd0A1E359811322d97991E03f863a0C30C2cF029C
  */
 
-export const ROUTER_ADDRESS = '0x7E18d71E5c0A664F91483FB839a4B1075e344946'
+export const ROUTER_ADDRESS = '0x8e8b8146d4cd8a0f8ee673b1b747918b913cfb6a'
+export const FACTORY_ADDRESS = '0xC3f2833eBD3961fE0E1C207D778B4200406f7590'
 export const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000'
 
 // a list of tokens by chain

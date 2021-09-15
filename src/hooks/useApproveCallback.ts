@@ -10,6 +10,7 @@ import { computeSlippageAdjustedAmounts } from '../utils/prices'
 import { calculateGasMargin } from '../utils'
 import { useTokenContract } from './useContract'
 import { useActiveWeb3React } from './index'
+import { BigNumber } from 'ethers'
 
 export enum ApprovalState {
   UNKNOWN,
@@ -80,7 +81,7 @@ export function useApproveCallback(
 
     return tokenContract
       .approve(spender, useExact ? amountToApprove.raw.toString() : MaxUint256, {
-        gasLimit: calculateGasMargin(estimatedGas)
+        gasLimit: calculateGasMargin(BigNumber.from(estimatedGas.toString()))
       })
       .then((response: TransactionResponse) => {
         addTransaction(response, {
